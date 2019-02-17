@@ -1,8 +1,8 @@
 /*
  * @Author: LUAN Junqing
- * @Date: 2019-02-17 11:55:24
+ * @Date: 2019-02-15 11:55:24
  * @Last Modified by: LUAN Junqing
- * @Last Modified time: 2019-02-17 17:45:55
+ * @Last Modified time: 2019-02-17 17:55:38
  */
 
 
@@ -24,7 +24,9 @@ void imgToGray(IplImage *Image_IN, uchar *Data_out, int step_gray){
 	Data_in = (uchar *)Image_IN -> imageData;
 	for(i = 0; i < height; ++i){
 		for(j = 0; j < width; ++j){
-			Data_out[i*step_gray + j] = 0.114*Data_in[i*step + j*channels + 0] + 0.587*Data_in[i*step + j*channels + 1] + 0.299*Data_in[i*step + j*channels + 2];
+			Data_out[i * step_gray + j] = 0.114 * Data_in[i * step + j * channels + 0] +
+                                          0.587 * Data_in[i * step + j * channels + 1] +
+                                          0.299 * Data_in[i * step + j * channels + 2];
 		}
 	}
 }
@@ -35,7 +37,7 @@ int compare(const void *f1, const void *f2){
 
 unsigned int sum(char tab[], unsigned int length){
     int i;
-    unsigned int r=0;
+    unsigned int r = 0;
     for(i=0; i < length; ++i){
         r += tab[i];
     }
@@ -127,13 +129,13 @@ void filter_sobelY(IplImage *img_Filtered, IplImage *img_Original){
     uchar *Data_original, *Data_filtered;
     char window[WINDOW_LEN];
     char tmp_img;
-    width=MIN(img_Filtered->width, img_Original->width);
-    height=MIN(img_Filtered->height, img_Original->height);
-    Data_original=(uchar *)img_Original->imageData;
-    Data_filtered=(uchar *)img_Filtered->imageData;
-    step_gray=img_Filtered->widthStep/sizeof(uchar);
-    for(i=1;i<height-1;++i){
-        for(j=1;j<width-1;++j){
+    width = MIN(img_Filtered -> width, img_Original -> width);
+    height = MIN(img_Filtered -> height, img_Original -> height);
+    Data_original = (uchar *)img_Original -> imageData;
+    Data_filtered = (uchar *)img_Filtered -> imageData;
+    step_gray = img_Filtered -> widthStep/sizeof(uchar);
+    for(i = 1; i < height - 1; ++i){
+        for(j = 1; j < width - 1; ++j){
             window[0] = (char)Data_original[i * step_gray + j] * -2;
             window[1] = (char)Data_original[i * step_gray + (j-1)] * -1;
             window[2] = (char)Data_original[i * step_gray + (j+1)] * -1;
@@ -194,11 +196,11 @@ int main(int argc, char const *argv[]){
     }
 
     // Définition des fenêtres
-	cvNamedWindow("Image_IN_Window", CV_WINDOW_AUTOSIZE);   // Image_IN
-	cvNamedWindow("Image_OUT_Window", CV_WINDOW_AUTOSIZE); 	// Image_OUT
-	cvNamedWindow("Image_MED_Window", CV_WINDOW_AUTOSIZE); 	// Image_MED
-	cvNamedWindow("Image_SOX_Window", CV_WINDOW_AUTOSIZE); 	// Image_SOX
-	cvNamedWindow("Image_SOY_Window", CV_WINDOW_AUTOSIZE); 	// Image_SOY
+	cvNamedWindow("Image_IN_Window", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Image_OUT_Window", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Image_MED_Window", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Image_SOX_Window", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Image_SOY_Window", CV_WINDOW_AUTOSIZE);
 
 	// Positionnement des fenêtres
     cvMoveWindow("Image_IN_Window", 0, 0);
@@ -206,15 +208,14 @@ int main(int argc, char const *argv[]){
 	cvMoveWindow("Image_MED_Window", 500, 0);
 	cvMoveWindow("Image_SOX_Window", 500, 500);
 	cvMoveWindow("Image_SOY_Window", 1000, 500);
-	// cvMoveWindow("Image_SOM_Window", 1400,0);
 
 	// Première acquisition
 	Image_IN = cvQueryFrame(capture);
 	// Création des images de sortie
 	Image_OUT = cvCreateImage(cvSize(Image_IN -> width, Image_IN -> height),  IPL_DEPTH_8U, 1);
 	Image_MED = cvCreateImage(cvSize(Image_IN -> width, Image_IN -> height),  IPL_DEPTH_8U, 1);
-	Image_SOX = cvCreateImage(cvSize(Image_IN->width,Image_IN->height),  IPL_DEPTH_8U, 1);
-	Image_SOY = cvCreateImage(cvSize(Image_IN->width,Image_IN->height),  IPL_DEPTH_8U, 1);
+	Image_SOX = cvCreateImage(cvSize(Image_IN -> width, Image_IN -> height),  IPL_DEPTH_8U, 1);
+	Image_SOY = cvCreateImage(cvSize(Image_IN -> width, Image_IN -> height),  IPL_DEPTH_8U, 1);
 
 	int step_gray = Image_OUT -> widthStep/sizeof(uchar);
 
@@ -223,11 +224,11 @@ int main(int argc, char const *argv[]){
 		// On récupère une Image_IN
 		Image_IN = cvQueryFrame(capture);
 		// Dimension
-		height    = Image_IN -> height;
-		width     = Image_IN -> width;
+		height = Image_IN -> height;
+		width = Image_IN -> width;
 		// distance entre les deux premiers pixels de lignes successives
-		step      = Image_IN -> widthStep;
-		channels  = Image_IN -> nChannels;
+		step = Image_IN -> widthStep;
+		channels = Image_IN -> nChannels;
 		// initialisation des pointeurs de donnée
 		Data_in  = (uchar*) Image_IN -> imageData;
 		Data_out = (uchar*) Image_OUT -> imageData;
@@ -249,10 +250,8 @@ int main(int argc, char const *argv[]){
 		// On attend 5ms
 		ESC_keyboard = cvWaitKey(5);
     }
-
     // Fermeture de l'acquisition Vidéo
 	cvReleaseCapture(&capture);
-
 	// Fermeture des fenêtres d'affichage
 	cvDestroyWindow("Image_IN_Window");
     cvDestroyWindow("Image_OUT_Window");
